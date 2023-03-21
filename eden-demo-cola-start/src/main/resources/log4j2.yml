@@ -12,6 +12,8 @@ Configuration:
         value: "%d | %-5level | %X{traceId} | %C{1.}.%M:%L | %t | %msg%n%throwable"
       - name: console.pattern
         value: "%d | %-5level | %X{traceId} | %C{1.}.%M:%L | %t | %msg%n%throwable"
+      - name: cat.pattern
+        value: "%C{1.}.%M:%L | %t | %msg%n%throwable"
 
   Appenders:
     Console:
@@ -34,14 +36,20 @@ Configuration:
           size: "20MB"
       DefaultRolloverStrategy:
         max: 15
+    CAT: # 自定义附加器
+      name: CAT
+      level: INFO
+      PatternLayout:
+        pattern: ${cat.pattern}
 
   Loggers:
-    Root:
+    AsyncRoot:
       level: INFO
       includeLocation: true
       AppenderRef:
         - ref: CONSOLE
         - ref: ROLLING_FILE
+        - ref: CAT # 默认关闭，开启后将日志发送到 CAT 监控平台
     Logger:
       - name: org.ylzl
         level: INFO

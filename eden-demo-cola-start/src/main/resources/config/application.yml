@@ -92,14 +92,6 @@ spring:
           queueType: VariableLinkedBlockingQueue
           rejectedHandlerType: CallerRunsPolicy
 
-logging:
-  file:
-    name: ${spring.application.name}
-  config: classpath:log4j2.yml
-  level:
-    ROOT: INFO
-    org.ylzl.eden: INFO
-
 server:
   port: 8081
   shutdown: graceful # 优雅关闭
@@ -132,6 +124,7 @@ mybatis-plus: # ORM 组件
     auto-mapping-behavior: full
     call-setters-on-nulls: true
     use-column-label: true
+  type-aliases-package: org.ylzl.eden.demo.infrastructure
 
 arthas: # 在线诊断工具
   agent-id: ${spring.application.name}@${random.value}
@@ -164,10 +157,12 @@ dubbo: # 分布式调用组件
     retries: 0 # 重试次数
     timeout: 3000 # 超时时间
     check: false # 是否开启检查
+    filter: cat-tracing
   consumer:
     retries: 0 # 重试次数
     timeout: 3000 # 超时时间
     check: false # 是否开启检查
+    filter: cat-tracing,cat-consumer
 
 xxl: # 分布式调度平台
   job:
@@ -176,4 +171,19 @@ xxl: # 分布式调度平台
 cat: # 实时监控平台
   enabled: false # 默认关闭，请按需开启
 
+opentracing: # Jaeger
+  jaeger:
+    service-name: ${spring.application.name}
+    enabled: false
+    log-spans: true
+    enable-b3-propagation: true
+    enable-w3c-propagation: true
+    const-sampler:
+      decision: true
+    probabilistic-sampler:
+      sampling-rate: 1
+  spring:
+    cloud:
+      async:
+        enabled: false
 

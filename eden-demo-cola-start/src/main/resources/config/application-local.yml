@@ -9,10 +9,14 @@ spring:
         trace: false
         web-allow-others: false
   datasource: # 数据源管理
-    username: sa
-    password: demo
-    url: jdbc:h2:mem:db;DB_CLOSE_ON_EXIT=TRUE
-    driver-class-name: org.h2.Driver
+#    username: sa
+#    password: demo
+#    url: jdbc:h2:mem:db;DB_CLOSE_ON_EXIT=TRUE
+#    driver-class-name: org.h2.Driver
+    username: root
+    password: demo@123
+    url: jdbc:mysql://localhost:3306/demo?rewriteBatchedStatements=true&useSSL=false&useOldAliasMetadataBehavior=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
     dynamic: # 多数据源，使用 @DS 切换
       enabled: false # 默认关闭，请按需开启
       strict: true
@@ -79,7 +83,7 @@ spring:
             data-type: json
   redis: # 缓存数据库
     enabled: false # 默认关闭，请按需开启
-    password:
+    password: demo@123
     timeout: 5000
     database: 1
     host: localhost
@@ -90,11 +94,6 @@ spring:
     base-url: http://localhost:9411
   kafka: # 消息队列
     bootstrap-servers: localhost:9092
-
-logging:
-  level:
-    ROOT: INFO
-    org.ylzl.eden: DEBUG
 
 rocketmq: # 消息队列
   enabled: false # 默认关闭，请按需开启
@@ -121,8 +120,16 @@ xxl: # 分布式调度平台
       log-retention-days: 7
 
 cat: # 实时监控平台
-  enabled: false # 默认关闭，请按需开启
+  enabled: true # 默认关闭，请按需开启
+  trace-mode: true # 开启访问观测
   home: /tmp
   servers: localhost
   tcp-port: 2280
   http-port: 8080
+
+opentracing: # Jaeger 链路跟踪
+  jaeger:
+    enabled: false
+    udp-sender:
+      host: localhost
+      port: 6831
